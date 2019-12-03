@@ -67,7 +67,8 @@ imFitModel <- function(im.data) {
             if (1 == j) {
                 prev.y <- NULL;
             } else {
-                prev.y <- voutcome[1:(j-1)];
+                ## prev.y <- voutcome[1:(j-1)];
+                prev.y <- voutcome[j-1]
             }
             cur.f    <- paste(voutcome[j], "~", paste(c(prev.y, vy0, vcov), collapse="+"));
             cur.lm   <- lm(as.formula(cur.f), data=cur.data);
