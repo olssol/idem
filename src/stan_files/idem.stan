@@ -14,7 +14,6 @@ functions {
     }
 
     rst = log(rst/n/h);      
-    
     //return
     return(rst);
   }

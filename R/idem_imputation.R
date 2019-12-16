@@ -296,6 +296,7 @@ imImpSingle <- function(dsub, fit.rst, normal=TRUE,
                       RESIDUAL     = RESIDUAL,
                       NRES         = nrow(RESIDUAL),
                       H            = H);
+
     ##stan sampling
     stan.rst <- sampling(stanmodels[["idem"]],
                          data=list.stan,
@@ -537,7 +538,7 @@ imImpAll <- function(fit.rst,
             update.progress$set(value=i/n.need,
                                 detail=paste(i, " out of ", n.need, sep=""));
         } else {
-            print(i);
+            cat(need.imp[i], ":", i, "out of", n.need, "\n");
         }
     }
 
