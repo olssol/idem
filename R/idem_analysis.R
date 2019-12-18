@@ -193,7 +193,7 @@ print.IDEMINFER <- function(x, delta0=NULL, delta1=NULL, ...) {
     cat("\nThe sensitivity parameters considered were\n");
     print(x$deltas);
 
-    get.theta.quant(x, delta0=delta0, delta1=delta1);
+    rst <- get.theta.quant(x, delta0=delta0, delta1=delta1)
 
     if (0 == length(x$bootstrap)) {
         cat("\n\nPlease conduct bootstrap analysis for hypothesis testing.\n")
@@ -205,6 +205,7 @@ print.IDEMINFER <- function(x, delta0=NULL, delta1=NULL, ...) {
             cat(" Please consider more \nbootstrap samples (e.g. >100) for the validity \nof the results.\n");
         cat("\n");
     }
+    invisible(rst)
 }
 
 

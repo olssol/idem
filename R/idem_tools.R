@@ -1034,6 +1034,7 @@ get.theta.quant <- function(object, delta0=NULL, delta1=NULL) {
     x <- as.matrix(dquant);
     format(x, digits = max(3L, getOption("digits") - 3L));
     print(x);
+    invisible(list(dtheta, dquant))
 }
 
 ##------------------------------------------------------
@@ -1245,6 +1246,7 @@ plot.imputed <- function(imp.rst,
                          xlim=NULL,
                          ylim=NULL,
                          mfrow=NULL,
+                         to.plot=NULL,
                          ...) {
 
     if (is.null(imp.rst))
@@ -1271,7 +1273,8 @@ plot.imputed <- function(imp.rst,
     if (endp) {
         to.plot <- TXT.ENDP;
     } else {
-        to.plot <- voutcome;
+        if (is.null(to.plot))
+            to.plot <- voutcome;
     }
 
     n.y <- length(to.plot);
@@ -1347,7 +1350,7 @@ plot.imputed <- function(imp.rst,
         ## xlabs <- "Z (Imputed)";
         xlabs <- endfml; ## AL
     } else {
-        xlabs <- voutcome;
+        xlabs <- to.plot;
     }
 
     for (i in 1:n.trt) {
