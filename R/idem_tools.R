@@ -1054,6 +1054,7 @@ plot.survivor <- function(data.all,
     voutcome  <- NULL;
     vtrt      <- NULL;
     trt.len   <- NULL;
+
     get.para(lst.var, env=environment());
 
     ## change completers to survivors
@@ -1100,7 +1101,7 @@ plot.survivor <- function(data.all,
              ylab="Observed Value",
              main=trt.len[i]);
 
-        axis(1, at=all.x, labels=c(t0, paste("y", times, sep="")));
+        axis(1, at=all.x, labels=c(t0, voutcome));
         axis(2, at=round(seq(ylims[1],ylims[2],length=5)))
 
         for (j in 1:nrow(cur.data)) {
