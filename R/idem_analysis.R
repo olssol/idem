@@ -137,7 +137,8 @@ imInfer <- function(imp.rst,
                                                 effect.quantiles=effect.quantiles);
                             }, mc.cores=n.cores);
 
-        rst.test <- get.tests(rst.org, rst.bs, quantiles = quant.ci);
+        rst.test <- get.tests(rst.org, rst.bs,
+                              duration = imp.rst$lst.var$duration, quantiles = quant.ci);
 
         ##return
         rtn.rst  <- list(theta            = rst.test$theta,
@@ -205,6 +206,7 @@ print.IDEMINFER <- function(x, delta0=NULL, delta1=NULL, ...) {
             cat(" Please consider more \nbootstrap samples (e.g. >100) for the validity \nof the results.\n");
         cat("\n");
     }
+
     invisible(rst)
 }
 

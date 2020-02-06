@@ -531,7 +531,8 @@ imImpAll <- function(fit.rst,
                                  fit.rst,
                                  normal=normal, ...);
         cur.rst <- imp.exponential(cur.bench, deltas=deltas, n.imp=n.imp);
-        cur.rst <- cbind('ID'=nrow(data.comp)+i, cur.rst);
+        cur.rst <- cbind('ID' = nrow(data.comp) + i,
+                         cur.rst)
         rst     <- rbind(rst, cur.rst);
 
         if ("PROGRESS" %in% toupper(class(update.progress))) {

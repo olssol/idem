@@ -912,7 +912,7 @@ get.boot.single <- function(data.all,
 }
 
 ##hypothesis testing
-get.tests <- function(rst.org, rst.boot, quantiles=c(0.025,0.975)) {
+get.tests <- function(rst.org, rst.boot, duration, quantiles=c(0.025,0.975)) {
     ##bootstrap
     meta  <- rep(list(NULL), 2);
     rst   <- rep(list(NULL), 2);
@@ -934,6 +934,7 @@ get.tests <- function(rst.org, rst.boot, quantiles=c(0.025,0.975)) {
     rst.qs  <- array(NA, dim=c(nrow(rst.boot[[1]]$effect.quantiles),
                                length(rst.boot),
                                2));
+
     for (i in 1:length(rst.boot)) {
         cur.med     <- rst.boot[[i]]$effect.quantiles;
         rst.qs[,i,] <- as.matrix(cur.med[, c("QuantY", "QuantSurv")]);
@@ -943,7 +944,7 @@ get.tests <- function(rst.org, rst.boot, quantiles=c(0.025,0.975)) {
     inxs <- ceiling(quantile(1:length(rst.boot), quantiles));
     for (i in 1:nrow(rst.boot[[1]]$effect.quantiles)) {
         cur.qs  <- rst.qs[i,,];
-        cur.qsc <- get.comp(cur.qs[,1], cur.qs[,2]);
+        cur.qsc <- get.comp(cur.qs[,1], cur.qs[,2], duration);
         cur.ord <- order(cur.qsc);
 
         cur.q   <- NULL;
@@ -1290,7 +1291,8 @@ plot.imputed <- function(imp.rst,
         inx          <- which(a.trt[i] == imp.data[,vtrt] & is.na(imp.data$IMP));
         lst.obs[[i]][[TXT.ENDP]] <- density(imp.data[inx, TXT.ENDP], adjust=adj, na.rm=TRUE);
 
-        inx          <- which(a.trt[i] == imp.data[,vtrt] & 0 == imp.data$DELTA);
+        inx <- which(a.trt[i] == imp.data[,vtrt] &
+                     0 == imp.data$DELTA);
 
         for (k in 1:length(voutcome)) {
             cur.y <- imp.data[inx, paste(ORG.PREFIX, voutcome[k], sep="")];
@@ -1303,17 +1305,18 @@ plot.imputed <- function(imp.rst,
         for (j in 1:n.delta) {
             lst.den[[i]][[j]] <- rep(list(NULL), n.y);
             inx               <- which(a.trt[i]  == imp.data[,vtrt] &
-                                           !is.na(imp.data$IMP) &
-                                           deltas[j] == imp.data$DELTA);
+                                       !is.na(imp.data$IMP) &
+                                       deltas[j] == imp.data$DELTA);
 
             for (k in 1:n.y) {
                 cur.y <- imp.data[inx, to.plot[k]];
 
-	            if(length(cur.y) == 0) break ## AL
+                if (length(cur.y) == 0)
+                    break ## AL
 
-                cur.d <- density(cur.y, adjust=adj, na.rm=TRUE);
-                maxy  <- max(maxy, cur.d$y);
-                lst.den[[i]][[j]][[k]] <- cur.d;
+                cur.d <- density(cur.y, adjust = adj, na.rm = TRUE);
+                maxy  <- max(maxy, cur.d$y)
+                lst.den[[i]][[j]][[k]] <- cur.d
             }
         }
     }
@@ -1356,8 +1359,8 @@ plot.imputed <- function(imp.rst,
     for (i in 1:n.trt) {
         for (k in 1:n.y) {
             plot(NULL,
-                 xlab=xlabs[k], ylab="Density",
-                 main=trt.len[i],
+                 xlab = xlabs[k], ylab = "Density",
+                 main = trt.len[i],
                  xlim=xlim, ylim=ylim);
 
             for (j in 1:n.delta) {
@@ -1385,17 +1388,17 @@ plot.imputed <- function(imp.rst,
 
 ## Generate cumulative plot of the composite survival and functional outcome
 plot.composite <- function(imp.rst,
-                            delta=0,
-                            fname=NULL,
-                            buffer=0.05,
-                            at.surv=NULL,
-                            at.z=NULL,
-                            p.death=NULL,
-                            seg.lab=c("Survival", "Functional"),
-                            cols=rep(c("cyan", "red"),3),
-                            ltys=rep(1, 6),
-                            main="",
-                            ...) {
+                           delta=0,
+                           fname=NULL,
+                           buffer=0.05,
+                           at.surv=NULL,
+                           at.z=NULL,
+                           p.death=NULL,
+                           seg.lab=c("Survival", "Functional"),
+                           cols=rep(c("cyan", "red"), 3),
+                           ltys=rep(1, 6),
+                           main="",
+                           ...) {
 
 
     if (is.null(imp.rst))
@@ -1455,9 +1458,8 @@ plot.composite <- function(imp.rst,
     if (is.null(at.surv)) {
         at.surv <- range.surv;
     }
-    if (is.null(at.z)) {
-        at.z <- round(range.y,1);
-    }
+
+    at.z <- unique(c(at.z, round(range.y, 1)))
 
     ##outputfile
     if (!is.null(fname))
@@ -1469,9 +1471,14 @@ plot.composite <- function(imp.rst,
 
     box();
     ##axis(1, at=c(p.death/2, p.death+(1-p.death)/2), c("Survival","Functional"), tick=FALSE);
-    axis(1, at=f.surv(at.surv), at.surv);
-    axis(1, at=f.y(at.z), at.z);
-    axis(2, at=seq(0,1,0.25));
+    axis(1, at = f.surv(at.surv), at.surv)
+    axis(2, at = seq(0, 1, 0.25))
+    axis(1, at = f.y(at.z), at.z)
+
+    ## grid
+    abline(v = c(f.surv(at.surv), f.y(at.z)),
+           h = seq(0, 1, 0.25),
+           col = "gray", lty = 3)
 
     text(c(p.death/2, p.death+(1-p.death)/2),
          c(0.5,0.5),
