@@ -793,7 +793,7 @@ get.estimate <- function(imp.rst,
 
     rst <- list(lst.var  = lst.var,
                 deltas   = imp.rst$deltas,
-                complete = imp.rst$complete,
+                imp.rst  = imp.rst,
                 effect.quantiles=median.median,
                 theta=avg.rank,
                 survivor=rst.survivor,
