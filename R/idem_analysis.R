@@ -81,7 +81,7 @@ imInfer <- function(imp.rst,
                     n.boot = 0,
                     n.cores = 1,
                     update.progress=NULL,
-                    effect.quantiles=0.5,
+                    effect.quantiles=c(0.25,0.5,0.75),
                     quant.ci=c(0.025, 0.975),
                     ...,
                     seed = NULL) {
@@ -160,6 +160,38 @@ imInfer <- function(imp.rst,
                       deltas  = rst.org$deltas));
     class(rtn.rst) <- get.const("TEST.CLASS")
 
+    rtn.rst
+}
+
+#' Treatment effect estimation and hypothesis testing
+#'
+#' Estimation and hypothesis testing based on imputation and bootstrap results
+#'
+#' @export
+#'
+imInfer2 <- function(imp.rst, test.rst, effect.quantiles=0.5, quant.ci=c(0.025, 0.975)) {
+
+    stopifnot(get.const("IMP.CLASS") %in% class(imp.rst));
+    stopifnot(get.const("TEST.CLASS") %in% class(test.rst));
+    stopifnot(!is.null(imp.rst$org.data));
+
+    ##original result
+    rst.org  <- get.estimate(imp.rst, effect.quantiles = effect.quantiles);
+    rst.bs   <- test.rst$bootstrap
+    rst.test <- get.tests(rst.org, rst.bs,
+                          duration = imp.rst$lst.var$duration, quantiles = quant.ci)
+
+    ##return
+    rtn.rst  <- list(theta            = rst.test$theta,
+                     effect.quantiles = rst.test$effect.quantiles,
+                     survivor         = rst.test$survivor,
+                     bootstrap        = rst.bs)
+    ##return
+    rtn.rst <- c(rtn.rst,
+                 list(lst.var = rst.org$lst.var,
+                      deltas  = rst.org$deltas));
+
+    class(rtn.rst) <- get.const("TEST.CLASS")
     rtn.rst
 }
 

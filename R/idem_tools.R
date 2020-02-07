@@ -791,8 +791,9 @@ get.estimate <- function(imp.rst,
         rst.survivor$Diff <- rst.survivor$Mean1 - rst.survivor$Mean0;
     }
 
-    rst <- list(lst.var=lst.var,
-                deltas=imp.rst$deltas,
+    rst <- list(lst.var  = lst.var,
+                deltas   = imp.rst$deltas,
+                complete = imp.rst$complete,
                 effect.quantiles=median.median,
                 theta=avg.rank,
                 survivor=rst.survivor,
@@ -916,6 +917,7 @@ get.tests <- function(rst.org, rst.boot, duration, quantiles=c(0.025,0.975)) {
     ##bootstrap
     meta  <- rep(list(NULL), 2);
     rst   <- rep(list(NULL), 2);
+
     for (i in 1:length(rst.boot)) {
         cur.rank <- rst.boot[[i]]$theta;
         cur.surv <- rst.boot[[i]]$survivor;
@@ -928,8 +930,8 @@ get.tests <- function(rst.org, rst.boot, duration, quantiles=c(0.025,0.975)) {
         rst[[1]] <- cbind(rst[[1]], cur.rank[,ncol(cur.rank)]);
         rst[[2]] <- cbind(rst[[2]], cur.surv[,ncol(cur.surv)]);
     }
-    rsd   <- cbind(meta[[1]], SD=apply(rst[[1]], 1, sd));
-    rsurv <- cbind(meta[[2]], SD=apply(rst[[2]], 1, sd));
+    rsd   <- cbind(meta[[1]], SD = apply(rst[[1]], 1, sd));
+    rsurv <- cbind(meta[[2]], SD = apply(rst[[2]], 1, sd));
 
     rst.qs  <- array(NA, dim=c(nrow(rst.boot[[1]]$effect.quantiles),
                                length(rst.boot),
@@ -943,6 +945,8 @@ get.tests <- function(rst.org, rst.boot, duration, quantiles=c(0.025,0.975)) {
     rqs  <- NULL;
     inxs <- ceiling(quantile(1:length(rst.boot), quantiles));
     for (i in 1:nrow(rst.boot[[1]]$effect.quantiles)) {
+
+        browser()
         cur.qs  <- rst.qs[i,,];
         cur.qsc <- get.comp(cur.qs[,1], cur.qs[,2], duration);
         cur.ord <- order(cur.qsc);
