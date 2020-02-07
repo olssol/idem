@@ -945,8 +945,6 @@ get.tests <- function(rst.org, rst.boot, duration, quantiles=c(0.025,0.975)) {
     rqs  <- NULL;
     inxs <- ceiling(quantile(1:length(rst.boot), quantiles));
     for (i in 1:nrow(rst.boot[[1]]$effect.quantiles)) {
-
-        browser()
         cur.qs  <- rst.qs[i,,];
         cur.qsc <- get.comp(cur.qs[,1], cur.qs[,2], duration);
         cur.ord <- order(cur.qsc);
