@@ -163,38 +163,6 @@ imInfer <- function(imp.rst,
     rtn.rst
 }
 
-#' Treatment effect estimation and hypothesis testing
-#'
-#' Estimation and hypothesis testing based on imputation and bootstrap results
-#'
-#' @export
-#'
-imInfer2 <- function(imp.rst, test.rst, effect.quantiles=0.5, quant.ci=c(0.025, 0.975)) {
-
-    stopifnot(get.const("IMP.CLASS") %in% class(imp.rst));
-    stopifnot(get.const("TEST.CLASS") %in% class(test.rst));
-    stopifnot(!is.null(imp.rst$org.data));
-
-    ##original result
-    rst.org  <- get.estimate(imp.rst, effect.quantiles = effect.quantiles);
-    rst.bs   <- test.rst$bootstrap
-    rst.test <- get.tests(rst.org, rst.bs,
-                          duration = imp.rst$lst.var$duration, quantiles = quant.ci)
-
-    ##return
-    rtn.rst  <- list(theta            = rst.test$theta,
-                     effect.quantiles = rst.test$effect.quantiles,
-                     survivor         = rst.test$survivor,
-                     bootstrap        = rst.bs)
-    ##return
-    rtn.rst <- c(rtn.rst,
-                 list(lst.var = rst.org$lst.var,
-                      deltas  = rst.org$deltas));
-
-    class(rtn.rst) <- get.const("TEST.CLASS")
-    rtn.rst
-}
-
 
 #' Print inference results
 #'
@@ -226,7 +194,7 @@ print.IDEMINFER <- function(x, delta0=NULL, delta1=NULL, ...) {
     cat("\nThe sensitivity parameters considered were\n");
     print(x$deltas);
 
-    rst <- get.theta.quant(x, delta0=delta0, delta1=delta1)
+    rst <- get.theta.quant(x, delta0 = delta0, delta1 = delta1)
 
     if (0 == length(x$bootstrap)) {
         cat("\n\nPlease conduct bootstrap analysis for hypothesis testing.\n")

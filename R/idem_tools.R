@@ -1011,7 +1011,7 @@ get.tests <- function(rst.org, rst.boot, duration, quantiles=c(0.025,0.975)) {
 }
 
 ##print theta and quantiles for selected delta
-get.theta.quant <- function(object, delta0=NULL, delta1=NULL) {
+get.theta.quant <- function(object, delta0 = NULL, delta1 = NULL) {
     cat("\nTreatment effect (theta) under different \nsensitivity parameters are: \n\n");
 
     dtheta <- object$theta;
