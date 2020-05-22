@@ -129,29 +129,28 @@ imImpAll_mice <- function(im.data, deltas = 0, n.imp  = 5,
             t_ums            <- paste(j, "+0*", c(vy0, vcov)[1], sep = "")
             mnar.blot        <- rep(list(ums = t_ums), length(voutcome))
             names(mnar.blot) <- voutcome
+
+            cur_imp <- mice(cur_d, m = n.imp,
+                            method = vec_method, blots = mnar.blot,
+                            print = F)
+
+            ## append to results
+            imp_id  <- cur_data[, "__id__"]
+            imp_inx <- which(imp_id %in% need.imp)
+            imp_id  <- imp_id[imp_inx]
+
+            cur_imp_data <- data.all[imp_id, ]
+            for (k in seq_len(n.imp)) {
+                cur_complete             <- complete(cur_imp, k)
+                cur_imp_data[, voutcome] <- cur_complete[imp_inx, voutcome]
+                cur_imp_data$ID          <- rec_id + seq_len(nrow(cur_imp_data))
+                cur_imp_data$DELTA       <- j
+                cur_imp_data$IMP         <- k
+
+                rst <- rbind(rst, cur_imp_data)
+            }
+            rec_id <- rec_id + length(imp_id)
         }
-
-        cur_imp <- mice(cur_d, m = n.imp,
-                        method = vec_method, blots = mnar.blot,
-                        print = F)
-
-        ## append to results
-        imp_id  <- cur_data[, "__id__"]
-        imp_inx <- which(imp_id %in% need.imp)
-        imp_id  <- imp_id[imp_inx]
-
-        cur_imp_data <- data.all[imp_id, ]
-        for (k in seq_len(n.imp)) {
-            cur_complete             <- complete(cur_imp, k)
-            cur_imp_data[, voutcome] <- cur_complete[imp_inx, voutcome]
-            cur_imp_data$ID          <- rec_id + seq_len(nrow(cur_imp_data))
-            cur_imp_data$DELTA       <- j
-            cur_imp_data$IMP         <- k
-
-            rst <- rbind(rst, cur_imp_data[, colnames(rst)])
-        }
-
-        rec_id <- rec_id + length(imp_id)
     }
 
     ## transform back outcome
