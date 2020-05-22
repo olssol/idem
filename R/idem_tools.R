@@ -19,6 +19,8 @@ get.const <- function(cname) {
            FIT.CLASS   = "IDEMFIT",
            BENCH.CLASS = "IDEMSINGLE",
            IMP.CLASS   = "IDEMIMP",
+           IMP.MICE    = "IDEMIMPMICE",
+           IMP.STAN    = "IDEMIMPSTAN",
            TEST.CLASS  = "IDEMINFER",
            SACE.CLASS  = "IDEMSACE",
            "default"
@@ -875,13 +877,13 @@ combine.boot.all <- function(n.boot, prefix="boot_rst", rst.name="rst.bs") {
 
 ##bootstrap single case
 get.boot.single <- function(data.all,
-                           lst.var,
-                           deltas = 0,
-                           boot=TRUE,
-                           n.imp=5,
-                           normal=TRUE,
-                           stan.par=stan.par,
-                           ...) {
+                            lst.var,
+                            deltas = 0,
+                            boot=TRUE,
+                            n.imp=5,
+                            normal=TRUE,
+                            stan.par=stan.par,
+                            ...) {
     goodImp <- FALSE;
     while (!goodImp) {
         rst <- tryCatch({
@@ -892,14 +894,18 @@ get.boot.single <- function(data.all,
                 cur.smp <- data.all;
             }
 
-            cur.data <- do.call(imData, c(list(cur.smp), lst.var));
-            fit.rst  <- imFitModel(cur.data);
-            cur.full <- do.call(imImpAll, c(list(fit.rst=fit.rst,
-                                                 normal=normal,
-                                                 n.imp=n.imp,
-                                                 deltas=deltas
-                                                 ),
-                                            stan.par));
+            cur.data <- do.call(imData, c(list(cur.smp), lst.var))
+            if (lst.var$mice) {
+                cur.full <- imImpAll_mice(cur.data, deltas = deltas, n.imp  = n.imp)
+            } else {
+                fit.rst  <- imFitModel(cur.data);
+                cur.full <- do.call(imImpAll, c(list(fit.rst=fit.rst,
+                                                     normal=normal,
+                                                     n.imp=n.imp,
+                                                     deltas=deltas
+                                                     ),
+                                                stan.par))
+            }
             rst      <- get.estimate(cur.full, ...);
             goodImp  <- TRUE;
             rst

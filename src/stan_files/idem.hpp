@@ -36,7 +36,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_idem");
-    reader.add_event(103, 101, "end", "model_idem");
+    reader.add_event(102, 100, "end", "model_idem");
     return reader;
 }
 
@@ -571,11 +571,6 @@ public:
             // model body
 
             current_statement_begin__ = 99;
-            if (pstream__) {
-                stan_print(pstream__,YMIS);
-                *pstream__ << std::endl;
-            }
-            current_statement_begin__ = 100;
             lp_accum__.add(cond_lpdf<propto__>(YMIS, YOBS, COEF, NY, MU, SIGMA, IMIS, INX, ASSUMENORMAL, NRES, RESIDUAL, H, pstream__));
 
         } catch (const std::exception& e) {

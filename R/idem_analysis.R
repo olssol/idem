@@ -101,7 +101,8 @@ imInfer <- function(imp.rst,
     }
 
     ##original result
-    rst.org <- get.estimate(imp.rst, effect.quantiles=effect.quantiles);
+    rst.org <- get.estimate(imp.rst,
+                            effect.quantiles=effect.quantiles);
 
     if (0 == n.boot) {
         rtn.rst  <- list(theta            = rst.org$theta,
@@ -138,7 +139,8 @@ imInfer <- function(imp.rst,
                             }, mc.cores=n.cores);
 
         rst.test <- get.tests(rst.org, rst.bs,
-                              duration = imp.rst$lst.var$duration, quantiles = quant.ci);
+                              duration = imp.rst$lst.var$duration,
+                              quantiles = quant.ci);
 
         ##return
         rtn.rst  <- list(theta            = rst.test$theta,
@@ -261,5 +263,3 @@ plot.IDEMINFER <- function(x, con.v=0.05, nlevels=30, opt = c("pvalue", "effect"
     cur.data <- x$theta;
     plot.contour(cur.data, trt.len, col.var, con.v = con.v, nlevels = 30, ...);
 }
-
-

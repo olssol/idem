@@ -209,7 +209,8 @@ plot.IDEMFIT <- function(x, trt = NULL, mfrow = NULL, ...) {
 #' @export
 #'
 imImpSingle <- function(dsub, fit.rst, normal=TRUE,
-                        chains = 4, iter = 5000, warmup = 1000, control = list(adapt_delta=0.95),
+                        chains = 4, iter = 5000, warmup = 1000,
+                        control = list(adapt_delta=0.95),
                         ..., seed = NULL) {
 
     stopifnot(class(fit.rst) == get.const("FIT.CLASS"));
@@ -530,7 +531,8 @@ imImpAll <- function(fit.rst,
         cur.bench <- imImpSingle(data.all[need.imp[i],],
                                  fit.rst,
                                  normal=normal, ...);
-        cur.rst <- imp.exponential(cur.bench, deltas=deltas, n.imp=n.imp);
+        cur.rst <- imp.exponential(cur.bench, deltas=deltas, n.imp=n.imp)
+
         cur.rst <- cbind('ID' = nrow(data.comp) + i,
                          cur.rst)
         rst     <- rbind(rst, cur.rst);
@@ -550,6 +552,8 @@ imImpAll <- function(fit.rst,
 
     ##return
     rownames(rst) <- NULL;
+    lst.var$mice  <- FALSE
+
     rtn.rst <- list(lst.var  = lst.var,
                     deltas   = deltas,
                     normal   = normal,
@@ -558,7 +562,9 @@ imImpAll <- function(fit.rst,
                     stan.par = list(...),
                     complete = rst);
 
-    class(rtn.rst) <- c(class(rtn.rst), get.const("IMP.CLASS"));
+    class(rtn.rst) <- c(class(rtn.rst),
+                        get.const("IMP.CLASS"),
+                        get.const("IMP.STAN"))
 
     invisible(rtn.rst);
 }

@@ -13,6 +13,7 @@
 #' @importFrom sqldf sqldf
 #' @importFrom parallel detectCores mclapply
 #'
+#' @import mice
 #' @import survival
 #' @import stats
 #' @import Rcpp
