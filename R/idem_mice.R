@@ -7,7 +7,7 @@
 #' @inheritParams imImpAll
 #' @inheritParams imFitModel
 #'
-#'
+#' @param ... Parameters for \code{mice}
 #' @return
 #'
 #' If \code{imputeNone} is TRUE, return a dataset with the original data for the
@@ -38,7 +38,7 @@
 #' @export
 #'
 imImpAll_mice <- function(im.data, deltas = 0, n.imp  = 5,
-                          endponly = TRUE, seed = NULL) {
+                          endponly = TRUE, seed = NULL, ...) {
 
     f.addcols <- function(dset) {
         cbind('ID'    = 1:nrow(dset),
@@ -132,7 +132,9 @@ imImpAll_mice <- function(im.data, deltas = 0, n.imp  = 5,
 
             cur_imp <- mice(cur_d, m = n.imp,
                             method = vec_method, blots = mnar.blot,
-                            print = F)
+                            ...)
+
+            ## print(cur_imp$logged)
 
             ## append to results
             imp_id  <- cur_data[, "__id__"]
@@ -170,13 +172,13 @@ imImpAll_mice <- function(im.data, deltas = 0, n.imp  = 5,
 
     ##return
     rownames(rst) <- NULL
-    lst.var$mice  <- TRUE
     rtn.rst <- list(lst.var  = lst.var,
                     deltas   = deltas,
                     normal   = TRUE,
                     org.data = im.data$data,
                     n.imp    = n.imp,
-                    stan.par = NA,
+                    imp.par  = list(...),
+                    use_mice = TRUE,
                     complete = rst)
 
     class(rtn.rst) <- c(class(rtn.rst),

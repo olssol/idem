@@ -552,14 +552,13 @@ imImpAll <- function(fit.rst,
 
     ##return
     rownames(rst) <- NULL;
-    lst.var$mice  <- FALSE
-
     rtn.rst <- list(lst.var  = lst.var,
                     deltas   = deltas,
                     normal   = normal,
                     org.data = data.all,
                     n.imp    = n.imp,
-                    stan.par = list(...),
+                    imp.par  = list(...),
+                    use_mice = FALSE,
                     complete = rst);
 
     class(rtn.rst) <- c(class(rtn.rst),

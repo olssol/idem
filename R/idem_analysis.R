@@ -109,12 +109,13 @@ imInfer <- function(imp.rst,
                          effect.quantiles = rst.org$effect.quantiles,
                          survivor         = rst.org$survivor);
     } else {
-        data.all  <- imp.rst$org.data;
-        lst.var   <- imp.rst$lst.var;
-        deltas    <- imp.rst$deltas;
-        n.imp     <- imp.rst$n.imp;
-        stan.par  <- imp.rst$stan.par;
-        normal    <- imp.rst$normal;
+        data.all  <- imp.rst$org.data
+        lst.var   <- imp.rst$lst.var
+        deltas    <- imp.rst$deltas
+        n.imp     <- imp.rst$n.imp
+        imp.par   <- imp.rst$imp.par
+        normal    <- imp.rst$normal
+        use_mice  <- imp.rst$use_mice
         n.cores   <- min(n.cores, parallel::detectCores()-1);
 
         if ("PROGRESS" %in% toupper(class(update.progress))
@@ -131,10 +132,11 @@ imInfer <- function(imp.rst,
                                 }
                                 get.boot.single(data.all,
                                                 lst.var,
-                                                deltas=deltas,
-                                                n.imp=n.imp,
-                                                normal=normal,
-                                                stan.par=stan.par,
+                                                deltas   = deltas,
+                                                n.imp    = n.imp,
+                                                normal   = normal,
+                                                imp.par  = imp.par,
+                                                use_mice = use_mice,
                                                 effect.quantiles=effect.quantiles);
                             }, mc.cores=n.cores);
 

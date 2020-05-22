@@ -882,7 +882,8 @@ get.boot.single <- function(data.all,
                             boot=TRUE,
                             n.imp=5,
                             normal=TRUE,
-                            stan.par=stan.par,
+                            use_mice = FALSE,
+                            imp.par = NULL,
                             ...) {
     goodImp <- FALSE;
     while (!goodImp) {
@@ -895,16 +896,21 @@ get.boot.single <- function(data.all,
             }
 
             cur.data <- do.call(imData, c(list(cur.smp), lst.var))
-            if (lst.var$mice) {
-                cur.full <- imImpAll_mice(cur.data, deltas = deltas, n.imp  = n.imp)
+            if (use_mice) {
+                cur.full <- do.call(imImpAll_mice,
+                                    c(list(im.data = cur.data,
+                                           deltas  = deltas,
+                                           n.imp   = n.imp),
+                                      imp.par))
             } else {
                 fit.rst  <- imFitModel(cur.data);
-                cur.full <- do.call(imImpAll, c(list(fit.rst=fit.rst,
-                                                     normal=normal,
-                                                     n.imp=n.imp,
-                                                     deltas=deltas
-                                                     ),
-                                                stan.par))
+                cur.full <- do.call(imImpAll,
+                                    c(list(fit.rst=fit.rst,
+                                           normal=normal,
+                                           n.imp=n.imp,
+                                           deltas=deltas
+                                           ),
+                                      imp.par))
             }
             rst      <- get.estimate(cur.full, ...);
             goodImp  <- TRUE;
