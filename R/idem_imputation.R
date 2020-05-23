@@ -562,8 +562,7 @@ imImpAll <- function(fit.rst,
                     complete = rst);
 
     class(rtn.rst) <- c(class(rtn.rst),
-                        get.const("IMP.CLASS"),
-                        get.const("IMP.STAN"))
+                        get.const("IMP.CLASS"))
 
     invisible(rtn.rst);
 }
