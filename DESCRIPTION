@@ -24,10 +24,12 @@ Depends:
     methods
 License: GPL (>= 3)
 LinkingTo: StanHeaders (>= 2.18.0), rstan (>= 2.18.1), BH (>= 1.66.0), Rcpp (>=
-    0.12.0), RcppEigen (>= 0.3.3.3.0)
+    0.12.0), RcppEigen (>= 0.3.3.3.0), RcppParallel (>= 5.0.1)
 RcppModules: stan_fit4idem_mod
 Imports:
     rstan (>= 2.18.1),
+    RcppParallel (>= 5.0.1),
+    rstantools (>= 2.1.1),
     sqldf (>= 0.4),
     survival (>= 2.38),
     mice (>= 3.9.0),
