@@ -289,7 +289,7 @@ chk.pars <- function(data.all, lst.var) {
             err.msg <- ep("Endpoint expression contains more than one line");
         } else {
             chk.end <- NULL;
-            eval(parse(text=paste("chk.end <- try(with(data.all[, var.out],
+            eval(parse(text=paste("chk.end <- try(with(data.all[, var.out, drop = FALSE],
                                   {",lst.var$endfml,"}), silent=T)"
                                   )
                        )
