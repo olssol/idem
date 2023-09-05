@@ -19,8 +19,8 @@ functions {
   }
 
   real cond_lpdf(vector ymis, vector yobs, matrix coef,
-                 int ny, real[] mu, real[] sigma, int[] imis, int[] inx,
-                 int assumenormal, int nres, matrix residual, real[] h) {
+                 int ny, array[] real mu, array[] real sigma, array[] int imis, array[] int inx,
+                 int assumenormal, int nres, matrix residual, array[] real h) {
     real rst;
     real cmu;
     real csigma;
@@ -65,20 +65,20 @@ data {
   vector[NX]            X;    //covariates
   matrix[NY, NX+3]      COEF; //coefficents 1st column is sigma
 
-  int<lower=0, upper=1> IMIS[NY];
-  int<lower=1>          INX[NY];
+  array[NY] int<lower=0, upper=1> IMIS;
+  array[NY] int<lower=1>          INX;
 
   //residuals
   int<lower=0, upper=1> ASSUMENORMAL;
   int<lower=1>          NRES;
   matrix[NRES,NY]       RESIDUAL;
-  real                  H[NY]; 
+  array[NY] real                  H; 
 }
 
 transformed data {
   int<lower = 0> NMIS;
-  real MU[NY];
-  real SIGMA[NY];
+  array[NY] real MU;
+  array[NY] real SIGMA;
 
   NMIS = NY - NOBS;
   for (i in 1:NY) {
